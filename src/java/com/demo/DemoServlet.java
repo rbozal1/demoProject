@@ -9,28 +9,68 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-@WebServlet(name = "DemoServlet")
+
+import java.sql.DriverManager;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
+@WebServlet(name = "/DemoServlet")
 public class DemoServlet extends HttpServlet {
+
+    public DemoServlet() {
+        super();
+
+
+
+
+    }
+
+
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         PrintWriter out = response.getWriter();
-        doGet(request,response);
+        doGet(request, response);
 
         String name = request.getParameter("name");
         String pass = request.getParameter("pass");
 
-        if (name.equals("abc") && pass.equals("asd")) {
-            HttpSession session = request.getSession();
-            session.setAttribute("name", name);
-            response.sendRedirect("WelcomeUser.jsp");
-        }else
-            System.out.println("wrong username or password");
+        try{
+
+        }catch{
+
+        try {
+            Class.forName(".com.mysql.Jdbc.Driver");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbname", "root", "Asap0921!");
+            Statement stmt = con.createStatement();
+            ResultSet rs = stmt.executeQuery("select uname,upass from dbname.user_reg where uname='"+name+"'and upass= '"+pass+"'");
+
+            if (rs.next()) {
+
+
+                HttpSession session = request.getSession();
+                session.setAttribute("name", name);
+                response.sendRedirect("WelcomeUser.jsp");
+            }else {
+                System.out.println("wrong username or password");
+
+            }
+
+
+
+
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
     }
-
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        // TODO Auto-generated method stub
 
-        response.getWriter().append("Served at: ").append(request.getContextPath());
+
+
     }
-
 }
