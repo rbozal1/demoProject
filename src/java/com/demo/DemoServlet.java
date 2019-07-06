@@ -9,12 +9,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-
-import java.sql.DriverManager;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
+//import java.sql.DriverManager;
+//import java.sql.Connection;
+//import java.sql.ResultSet;
+//import java.sql.SQLException;
+//import java.sql.Statement;
 
 @WebServlet(name = "/DemoServlet")
 public class DemoServlet extends HttpServlet {
@@ -35,15 +35,21 @@ public class DemoServlet extends HttpServlet {
         String name = request.getParameter("name");
         String pass = request.getParameter("pass");
 
-        try{
+        try {
+            Class.forName("com.mysql.jdbc.Driver");
 
-        }catch{
+
+        } catch (ClassNotFoundException e) {
+
+            e.printStackTrace();
+        }
+
 
         try {
-            Class.forName(".com.mysql.Jdbc.Driver");
-            Connection con = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbname", "root", "Asap0921!");
+            Connection con = DriverManager.getConnection("jdbc:mysql://localhost/dbname", "root", "Asap0921!");
             Statement stmt = con.createStatement();
-            ResultSet rs = stmt.executeQuery("select uname,upass from dbname.user_reg where uname='"+name+"'and upass= '"+pass+"'");
+            ResultSet rs = stmt.executeQuery("select uname,upass from dbname.user_reg where uname='" + name + "'and upass= '" + pass + "'");
+
 
             if (rs.next()) {
 
